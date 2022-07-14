@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: pod-readiness-probe
+    labels:
+        test: readiness
+spec:
+   containers:
+       - name: readiness-probe-cont
+         image: busybox
+         args:
+           - /bin/sh
+           - -c
+           - sleep 40; touch file; sleep 600
+         readinessProbe:
+             exec:
+                command:
+                    - cat
+                    - file
+             initialDelaySeconds: 5
+             periodSeconds: 5 
+

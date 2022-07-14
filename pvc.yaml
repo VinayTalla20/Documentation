@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+      name: pvc-volume
+      labels:
+          vol: local-pvc
+spec: 
+   storageClassName: host-storage
+   accessModes:
+      - ReadWriteOnce
+   resources:
+      requests:
+         storage: 100Mi
+

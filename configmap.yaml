@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-sample
+data:
+   user.name: devops
+   user.role: manager

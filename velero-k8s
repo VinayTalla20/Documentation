@@ -1,0 +1,54 @@
+mkdir -p ~/minio/data
+
+minio installation using docker container
+
+docker run \
+  -p 9000:9000 \
+  -p 9001:9001 \
+  --name minio \
+  -v minio-data:/data \
+  -e "MINIO_ROOT_USER=root" \
+  -e "MINIO_ROOT_PASSWORD=sarasu10" \
+  quay.io/minio/minio server /data --console-address ":9001"
+
+
+
+velero install \
+   --provider aws \
+   --bucket kubernetes-cluster \
+   --secret-file ./minio.credentials \
+   --backup-location-config region=minio,s3ForcePathStyle=true,s3Url=http://192.168.1.165:9000
+   
+   
+  
+  if Velero plugin required:
+  after installaton velero we can add  velero plugin. 
+   velero plugin add velero/velero-plugin-for-aws:v1.0.0.
+   
+   
+   
+velero install \
+   --provider aws \
+   --bucket kubernetes-cluster \
+   --plugins velero/velero-plugin-for-aws:v1.0.0
+   --secret-file ./minio.credentials \
+   --backup-location-config region=minio,s3ForcePathStyle=true,s3Url=http://192.168.1.165:9000
+   
+   
+   
+   To uninstall velero from cluster 
+     velero uninstall --force
+     kubectl delete namespace/velero clusterrolebinding/velero
+     kubectl delete crds -l component=velero
+     
+     
+     velero backup describe firstbackup-original-namespace
+     velero backup logs firstbackup-original-namespace
+     
+     
+     velero backup create firstbackup-original-namespace  --include-namespaces original-namespace
+     velero restore create firstrestore-originalnamespace --from-backup firstbackup-original-namespace
+     
+     
+   
+ 

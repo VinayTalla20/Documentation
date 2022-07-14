@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+   name: svc-headless
+   labels:
+      run: nginx-stateful-set
+spec:
+   ports:
+     - port: 80
+       name: web
+   clusterIP: None
+   selector:
+      run: nginx-stateful-set 
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+   name: stateful-set
+   labels:
+     app: stateful
+spec:
+   serviceName: "svc-headless"
+   replicas: 2
+   selector:
+      matchLabels:
+         run: nginx-stateful-set
+   template:
+      metadata:
+         labels: 
+           run: nginx-stateful-set
+      spec:
+        containers:
+          - name: stateful-cont
+            image: nginx
+            volumeMounts: 
+              - name: state-vol
+                mountPath: /stateful
+   volumeClaimTemplates:
+      - metadata:
+           name: stateful-vol-pvc
+        spec:
+          storageClassName: host-storage
+          accessModes: 
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 100Mi
+
+
+
+
+
+

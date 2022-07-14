@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: job-sample
+spec:
+    ttlSecondsAfterFinished: 60
+    template:
+      spec:
+          containers:
+               - name: job-cont
+                 image: busybox
+                 command: ["echo","hello"]
+          restartPolicy: Never

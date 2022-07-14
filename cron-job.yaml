@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+      name: cron-job-sample
+spec:
+    schedule: "* * * * *" 
+    successfulJobsHistoryLimit: 0
+    failedJobsHistoryLimit: 0
+    #concurrentPolicy: allow
+    jobTemplate:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: simple-cont
+                image: busybox
+                command: ["echo","HELLO_WORLD"]
+            restartPolicy: Never
+
+
+

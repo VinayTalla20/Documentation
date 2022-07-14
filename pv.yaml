@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+     name: pv-volume-1
+spec:
+  storageClassName: host-storage
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+     path: /kube-volume-1
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+   name: pv-volume-2
+spec: 
+  storageClassName: host-storage
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+     path: /kube-volume-2
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-volume-3
+spec:
+  storageClassName: host-storage
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+      path: /kube-volume-3
+
+
