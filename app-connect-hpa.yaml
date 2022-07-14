@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: appconnect-hpa
+  labels: 
+     autoscale: appconnect
+spec:
+   maxReplicas: 2
+   minReplicas: 1
+   scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: deployment-appconnect
+   metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+             type: Utilization
+             averageUtilization: 20
+
+
