@@ -11,7 +11,10 @@ docker run \
   -e "MINIO_ROOT_PASSWORD=sarasu10" \
   quay.io/minio/minio server /data --console-address ":9001"
 
-
+    create file name with "minio.credentials"
+[default]
+aws_access_key_id=root
+aws_secret_access_key=sarasu10
 
 velero install \
    --provider aws \
