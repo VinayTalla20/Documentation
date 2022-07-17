@@ -1,0 +1,29 @@
+ETCDCTL_API=3 etcdctl --endpoints 127.0.0.1:2379 \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  member list
+  
+ETCDCTL_API=3 etcdctl --endpoints 192.168.1.220:2379 snapshot save etcd-restore.db
+
+sudo ETCDCTL_API=3 etcdctl --endpoints 192.168.1.220:2379 \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  snapshot save etcd-restore.db
+  
+ where trusted-ca-file, cert-file and key-file can be obtained from the description of the etcd Pod. 
+ 
+ 
+  Verify the snapshot:
+  
+  ETCDCTL_API=3 etcdctl --write-out=table snapshot status etcd-restore.db
+  
+  Restoring an etcd cluster 
+  
+  ETCDCTL_API=3 etcdctl --endpoints 192.168.1.220:2379 snapshot restore snapshotdb
+  ETCDCTL_API=3 etcdctl --data-dir <data-dir-location> snapshot restore snapshotdb
+  
+  reference:
+  
+  If the access URLs of the restored cluster is changed from the previous cluster, the Kubernetes API server must be reconfigured accordingly. In this case, restart Kubernetes API servers with the flag --etcd-servers=$NEW_ETCD_CLUSTER instead of the flag --etcd-servers=$OLD_ETCD_CLUSTER. Replace $NEW_ETCD_CLUSTER and $OLD_ETCD_CLUSTER with the respective IP addresses. If a load balancer is used in front of an etcd cluster, you might need to update the load balancer instead.

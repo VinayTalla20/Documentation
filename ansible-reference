@@ -1,0 +1,29 @@
+ add these lines to /etc/ansible/hosts file 
+
+[client_machines]
+192.168.1.165 ansible_ssh_pass=sarasu10 ansible_ssh_user=bandaru
+192.168.1.165 ansible_python_interpreter=/usr/bin/python3
+ 
+ install sshpass
+ apt-get install sshpass -y
+ 
+ 
+ playbook 
+ ---
+  - name: sample-playbook1
+    hosts: client_machines
+    become: true
+    become_user: root
+    gather_facts: true
+    tasks:
+       - name: Install httpd
+         apt:
+              name: nginx
+              state: latest
+       - name: Stopping httpd service
+         service:
+              name: nginx
+              state: stopped
+
+ansible-playbook sample.yaml -i /etc/ansible/hosts -e "ansible_become_password=sarasu10"
+ansible-playbook sample.yaml -i /etc/ansible/hosts --ask-become-pass
