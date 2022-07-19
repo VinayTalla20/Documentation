@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: deploy-affinity
+        labels:
+            deploy: nginx
+spec:
+   replicas: 3
+   selector:
+       matchLabels:
+            pod: nginx
+   template:
+       metadata:
+           name: pod-affinity
+           labels:
+               pod: nginx
+       spec:
+         affinity:
+            podAntiAffinity:
+               requiredDuringSchedulingIgnoredDuringExecution:
+                 - labelSelector:
+                      matchExpressions:
+                          - key: pod
+                            operator: In
+                            values:
+                             - nginx
+                   topologyKey: kubernetes.io/hostname
+         containers:
+           - name: nginx-cont-affinity
+             image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: svc-affinity-nginx
+spec:
+   selector:
+          pod: nginx
+   type: NodePort
+   ports:
+      - port: 80
+        targetPort: 80
+        nodePort: 30033
