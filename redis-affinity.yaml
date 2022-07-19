@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+     name: deploy-redis
+     labels:
+        deploy: redis
+spec:
+   replicas: 3
+   selector:
+       matchLabels:
+           pod: redis
+   template:
+      metadata:
+           name: pod-redis
+           labels:
+               pod: redis
+      spec:
+         affinity:
+             podAffinity:
+                 requiredDuringSchedulingIgnoredDuringExecution:
+                      - labelSelector:
+                           matchExpressions:
+                               - key: pod
+                                 operator: In
+                                 values:
+                                   - nginx
+                        topologyKey: kubernetes.io/hostname
+             podAntiAffinity:
+                 requiredDuringSchedulingIgnoredDuringExecution:
+                       - labelSelector:
+                            matchExpressions:
+                               - key: pod
+                                 operator: In
+                                 values:
+                                   - redis
+                         topologyKey: kubernetes.io/hostname
+         containers:
+          - name: nginx-affinity
+            image: redis
+            volumeMounts:
+               - name: pvc-affinity
+                 mountPath: /cont-affinity-pvc
+         volumes:
+          - name: pvc-affinity
+            persistentVolumeClaim:
+                claimName: pvc-affinity
