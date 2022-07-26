@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+     name: np
+     labels:
+         plugin: cni
+     namespace: networkpolicy
+spec:
+   podSelector:
+        matchLabels:
+            app: nginx
+   policyTypes:
+      - Ingress
+   ingress:
+       - from:
+         - namespaceSelector:
+                matchLabels:
+                 kubernetes.io/metadata.name: networkpolicy
+           podSelector:
+                matchLabels:
+                       app: np
+         ports:
+           - protocol: TCP
+             port: 80
