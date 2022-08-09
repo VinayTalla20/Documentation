@@ -1,0 +1,61 @@
+Nexus repository as a private container registry for docker and Kubernetes Deployments
+
+launch nexus repository through docker
+ 
+ sudo docker run -itd --name nexus-registry -p 8082:8082 -p 8081:8081 -v nexus-data:/nexus-data sonatype/nexus3
+
+   create repository with docker( hosted) type
+
+   leave other checkboxes uncheck 
+ 
+     open port for http connector
+
+configuration for pull and push images to nexus
+
+vim /etc/docker/daemon.json 
+
+{ "insecure-registries" : ["192.168.2.113:8082"] }     // 8082 port of http connector in repository created
+
+ service docker restart
+
+
+docker login  192.168.2.113:8082  -u username  -p password
+
+docker tag   imagename  192.168.2.113:8082/repositoryname:tagname  
+ 
+docker push 192.168.2.113:8082/repositoryname:tagname
+
+
+   Deploying  private images in kubernetes
+
+
+  cat /root/.docker/config.json
+
+  echo YWRtaW46ZGV2b3Bz | base64 -decode
+
+
+To create secret for private registry
+
+From Command Line
+
+kubectl create secret docker-registry nexus-secret --docker-server=192.168.2.113:8082 --docker-username=admin --docker-password=devops --docker-email=
+
+here username and password are of nexus credentials
+
+From manifest
+
+apiVersion: v1
+kind: Secret
+metadata:
+  ...
+  name: secretName
+  ...
+data:
+  .dockerconfigjson: eyJodHRwczovL2luZGV4L ... J0QUl6RTIifX0=   //base64 encoded located at /root/.docker/config.json
+type: kubernetes.io/dockerconfigjson
+
+
+kubectl get secret secretName --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+
+
+
