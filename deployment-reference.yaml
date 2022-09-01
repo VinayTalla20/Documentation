@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:
+  labels:
+  namespace:
+  annotations:
+spec:
+   replicas:
+   selector:
+      matchLabels:
+   updateStrategy: 
+        type: rollingUpdate
+        rollingUpdate:
+               maxUnAvailable:  
+   template:
+     metadata:
+        labels:
+        name:
+        namespace:
+     spec:
+       tolerations:
+          - key: 
+            operator:
+            effect:
+       nodeSelector:
+       affinity:
+          podAffinity:
+             reqiuredDuringSchedulingIgnoredDuringExecution:
+                -  labelSelector:
+                     matchExpressions:
+                     - key: 
+                       operator: 
+                       values:
+                           - x
+                           - y
+                   topologyKey:
+          podAntiAffinity:
+             ignoredDuringSchedulingRequiredDuringExecution:
+                 - labelSelectors:
+                     matchExpressions:
+                        - key: 
+                          operator:
+                          values:
+                                - x
+                                - y
+                   topologyKey:
+          nodeAffinity:
+              ignoredDuringSchedulingRequiredDuringExecution:
+                 - labelSelectors:
+                     matchExpressions:
+                        - key: 
+                          operator:
+                          values:
+                                - x
+                                - y                         
+                   topologykey:       
+       initContainers:
+       containers:
+         name:
+         image:
+         imagePullPolicy:
+         args:
+         command:
+         securityContext:
+            privileged: true
+         volumeMounts:
+            - name: 
+              mountPath: 
+         env:
+           - name:
+             value:
+           - name:
+             valueFrom:
+               configMapKeyRef:
+                    name:
+                     - key: 
+                       value:
+           - name:
+             valueFrom:
+               secretKeyRef:
+                    name:
+                     - key: 
+                       value:
+           - name: 
+             valueFrom:
+               fieldRef: 
+               fieldPath: metadata.name
+           - name:
+             valueFrom: 
+                resourceKeyRef:
+                   containerName:
+                   resource: requests.cpu
+         startupProbe:
+              exec:
+                command: 
+                    - cat
+                    - /path
+              intialDelaySeconds:
+              periodSeconds:
+         livenessProbe:
+            httpGet:
+               path: /livez
+               port: 8080
+            initialDelaySeconds:
+            periodSeconds:
+         readinessProbe:
+            tcpSocket:
+              port: 
+            initialDelaySeconds:
+            periodSeconds:
+         resources:
+            requests:
+               cpu:
+               memory:
+            limits:
+               cpu:
+               memory:
+         ports:
+           containerPort:
+           hostPort:
+       imagePullSecrets:
+       restartPolicy: Never, Always, OnFailure
+       volumes:
+          - name:
+            hostPath:
+              path:
+       terminationGracePeriodSeconds:
+     volumeClaimTemplates:
+        - metadata:
+            name: 
+             labels:
+          storageClassName:
+          accessModes:
+            - ReadWriteOnce
+          resources:   
+            requests:
+              memory:
