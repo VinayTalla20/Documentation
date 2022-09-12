@@ -1,0 +1,108 @@
+
+ssh -i /path/to/private/key -p PORT USER_NAME@SERVERIP
+
+
+
+eval "$(ssh-agent -s)"
+
+ssh-add path/to/private/key
+
+ssh-keygen -f ~/tatu-key-ecdsa -t ed25519
+
+
+ssh-copy-id SYSUSER@x.x.x.x
+
+ manually create the .ssh/authorized_keys file so it contains your public key.
+
+
+root@f36332fb3b6b:/root# ssh-copy-id -f -i /root/pubkey.pub vinay@192.168.2.113
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/pubkey.pub"
+vinay@192.168.2.113's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'vinay@192.168.2.113'"
+and check to make sure that only the key(s) you wanted were added.
+
+
+
+ chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+
+
+before permission  
+
+-rw-r--r-- 1 root root 399 Sep  6 12:22 key
+
+after  permission  
+
+-rw------- 1 root root 399 Sep  6 12:22 key
+
+
+The keys need to be read-writable only by you:
+
+chmod 600 ~/.ssh/id_rsa
+Alternatively, the keys can be only readable by you (this also blocks your write access):
+
+chmod 400 ~/.ssh/id_rsa
+
+
+
+troubleshooting  
+
+
+Encrypted Home Directory
+If you have an encrypted home directory, SSH cannot access your authorized_keys file because it is inside your encrypted home directory and won't be available until after you are authenticated. Therefore, SSH will default to password authentication.
+
+To solve this, create a folder outside your home named /etc/ssh/<username> (replace "<username>" with your actual username). This directory should have 755 permissions and be owned by the user. Move the authorized_keys file into it. The authorized_keys file should have 644 permissions and be owned by the user.
+
+Then edit your /etc/ssh/sshd_config and add:
+
+AuthorizedKeysFile    /etc/ssh/%u/authorized_keys
+Finally, restart ssh with:
+
+sudo service ssh restart
+
+
+
+
+ssh-privatekey  
+
+
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACD1HXwyeaxyNbnBZOVZQwUpSImhWblY713sTGGi5tBVwwAAAJD9/jGV/f4x
+lQAAAAtzc2gtZWQyNTUxOQAAACD1HXwyeaxyNbnBZOVZQwUpSImhWblY713sTGGi5tBVww
+AAAEABZohGe8hmib/DfvUD2tufZCprnMnkV+FWZPObvPrSqvUdfDJ5rHI1ucFk5VlDBSlI
+iaFZuVjvXexMYaLm0FXDAAAADXJvb3RAay13b3JrZXI=
+-----END OPENSSH PRIVATE KEY-----
+
+
+ssh-publickey
+
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPUdfDJ5rHI1ucFk5VlDBSlIiaFZuVjvXexMYaLm0FXD root@k-worker
+
+
+
+
+kubectl -n shopping exec -it shopping-api -- bash
+
+# Point to the internal API server hostname
+APISERVER=https://kubernetes.default.svc
+
+# Path to ServiceAccount token
+SERVICEACCOUNT=/var/run/secrets/kubernetes.io/serviceaccount
+
+# Read this Pod's namespace
+NAMESPACE=$(cat ${SERVICEACCOUNT}/namespace)
+
+# Read the ServiceAccount bearer token
+TOKEN=$(cat ${SERVICEACCOUNT}/token)
+
+# Reference the internal certificate authority (CA)
+CACERT=${SERVICEACCOUNT}/ca.crt
+
+
+curl --cacert ${CACERT} --header "Authorization: Bearer $TOKEN" -s ${APISERVER}/api/v1/namespaces/shopping/pods/
