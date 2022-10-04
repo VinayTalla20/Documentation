@@ -35,3 +35,12 @@ kind: List
 metadata:
   resourceVersion: ""
   selfLink: ""
+  
+  
+  exec into pod 
+  
+  APISERVER=https://kubernetes.default.svc.cluster.local
+  CACERT=/var/run/secrets/kubernetes/serviceaccount/ca.cert
+  TOKEN=var/run/secrets/kubernetes/serviceaccount/token
+  
+  curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X GET $APISERVER/api 
