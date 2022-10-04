@@ -1,0 +1,37 @@
+clusterrolebinding:
+
+attached ClusterRole of cluster-admin   so application or pod can accessing complete cluster information
+also attached namespaced service account to the Cluster Role Binding, so that pods gets this servcie account attached by kubelet within the namespace  
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rolebinding-default
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: test
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+  
+  
+  serviceaccount:
+  
+  apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    creationTimestamp: "2022-10-04T10:33:08Z"
+    name: default
+    namespace: test
+    resourceVersion: "70618"
+    uid: 66716885-fa55-4ffa-b15b-bc6b4a2d9fce
+  secrets:
+  - name: default-token-vxkwf
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
