@@ -1,0 +1,44 @@
+Adding USER to Kubernetes Cluster
+
+Creating Certs for user
+
+
+Creating private.key for a user
+
+#   openssl genrsa  -out  user.key  2048(bit encryption)
+
+Requesting CSR using private key
+
+#  openssl  req  -new  -key user.key  -out  user.csr  -subj       "/CN=username/O=developers"
+
+
+Signing the CSR using Authorized CA in our case Kubernetes Api-Server
+
+#   openssl  x509  -req  -in user.csr  -CA=path to ca.crt  -Cakey= path to ca.key 
+ -CAcreateserial   -out user.crt   -days  365
+
+
+
+Add user to cluster
+
+Kubernetes knowns only the user name  we defined at the time of certificates creation using CN name pointing to USERNAME 
+  
+
+Adding user credentials to config 
+
+#  Kubectl config set-credentials username  ---client-certificate user.crt   -client-key  user.key 
+
+Setting kubernetes context so that user can access to cluster
+
+#  Kubectl set-context contextName --user username --cluster ClusterName
+
+To set cluster entry 
+
+#   export KUBECONFIG=~/.kube/config_develop
+
+#  kubectl config set-cluster   ClusterName   \
+ -- server=https://masterIP:6443    --certificate-authority=path to ca.crt of master    --embed-certs=true 
+
+  
+We create Users in kubernetes for accessing kubernetes Cluster and also Service Accounts for applications to access the Cluster Resources or Objects
+
