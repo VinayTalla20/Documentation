@@ -1,0 +1,41 @@
+az network public-ip create \
+    --resource-group terraform-rg \
+    --name IngressAKSPublicIP \
+    --sku Standard \
+    --allocation-method static
+
+
+
+
+az network public-ip show --resource-group terraform-rg --name IngressAKSPublicIP --query ipAddress --output tsv
+
+40.121.XX.XX
+
+
+
+az role assignment create \
+    --assignee <Client ID> \
+    --role "Network Contributor" \
+    --scope /subscriptions/<subscription id>/resourceGroups/<resource group name>
+
+az aks show --resource-group terraform-rg --name terraform-aks --query nodeResourceGroup -o tsv
+
+MC_terraform-rg_terraform-aks_eastus
+MC_<resource_group_name>_<aks-cluster_name>_<location>
+    
+
+kubernetes.azure.com/cluster:MC_terraform-rg_terraform-aks_eastus
+
+
+Values.controller.service.annotations 
+
+
+annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: terraform-rg
+
+
+helm template test-ingress --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="terraform-rg"  .
+
+helm install test-ingress  --set controller.ingressClass=test-nginx  --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group": "terraform-rg"   --set controller.service.loadBalancerIP=20.124.29.51 . 
+
+helm install test-ingress --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="terraform-rg"  --set controller.ingressClass=test-nginx --set controller.service.loadBalancerIP=20.124.29.51  .
