@@ -17,16 +17,16 @@ Creating Certs for user
 
 Creating private.key for a user
 
-#   openssl genrsa  -out  user.key  2048(bit encryption)
+$  openssl genrsa  -out  user.key  2048(bit encryption)
 
 Requesting CSR using private key
 
-#  openssl  req  -new  -key user.key  -out  user.csr  -subj       "/CN=username/O=developers"
+$  openssl  req  -new  -key user.key  -out  user.csr  -subj       "/CN=username/O=developers"
 
 
 Signing the CSR using Authorized CA in our case Kubernetes Api-Server
 
-#   openssl  x509  -req  -in user.csr  -CA=path to ca.crt  -Cakey= path to ca.key 
+$   openssl  x509  -req  -in user.csr  -CA=path to ca.crt  -Cakey= path to ca.key 
  -CAcreateserial   -out user.crt   -days  365
 
 
