@@ -41,6 +41,6 @@ metadata:
   
   APISERVER=https://kubernetes.default.svc.cluster.local
   CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.cert
-  TOKEN=var/run/secrets/kubernetes.io/serviceaccount/token
+  TOKEN=$(cat var/run/secrets/kubernetes.io/serviceaccount/token)
   
   curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X GET $APISERVER/api 
